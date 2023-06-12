@@ -36,14 +36,6 @@ class ConversationalAI:
         generated_response = ""
 
         # Wrap the loop with tqdm
-        for token in tqdm(self.model.generate(conversation_history_input,
-                                            antiprompt='You:',
-                                            n_threads=6,
-                                            n_predict=40,
-                                            repeat_penalty=.5,
-                                            frequency_penalty=.5),
-                        desc='Generating response',
-                        unit='token'):
-            generated_response += token
+        generated_response = self.model(conversation_history_input, max_tokens=32, stop=["You:","Colli:", "\n"], echo=True)
 
         return generated_response
