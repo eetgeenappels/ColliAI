@@ -1,7 +1,6 @@
 from pyllamacpp.model import Model
 import json
 from tqdm import tqdm
-from Telegram import credentials
 
 class ConversationalAI:
     def __init__(self):
@@ -17,7 +16,7 @@ class ConversationalAI:
         prompt_suffix = "\nColli:"
                 
         # load model
-        self.model = Model(model_path=credentials.model,
+        self.model = Model(model_path='./WizardLM-7B-uncensored.ggmlv3.q4_0.bin',
               n_ctx=512,
               prompt_context=prompt_context,
               prompt_prefix=prompt_prefix,
@@ -36,6 +35,14 @@ class ConversationalAI:
         generated_response = ""
 
         # Wrap the loop with tqdm
-        generated_response = self.model(conversation_history_input, max_tokens=32, stop=["You:","Colli:", "\n"], echo=True)
+        for token in tqdm(self.model.generate(conversation_history_input,
+                                            antiprompt='You:',
+                                            n_threads=6,
+                                            n_predict=40,
+                                            repeat_penalty=.5,
+                                            frequency_penalty=.5),
+                        desc='Generating response',
+                        unit='token'):
+            generated_response += token
 
         return generated_response
