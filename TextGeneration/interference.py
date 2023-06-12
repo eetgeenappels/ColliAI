@@ -1,6 +1,7 @@
 from pyllamacpp.model import Model
 import json
 from tqdm import tqdm
+from Telegram import credentials
 
 class ConversationalAI:
     def __init__(self):
@@ -16,7 +17,7 @@ class ConversationalAI:
         prompt_suffix = "\nColli:"
                 
         # load model
-        self.model = Model(model_path='./WizardLM-7B-uncensored.ggmlv3.q4_0.bin',
+        self.model = Model(model_path=credentials.model,
               n_ctx=512,
               prompt_context=prompt_context,
               prompt_prefix=prompt_prefix,
