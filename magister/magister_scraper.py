@@ -55,7 +55,7 @@ class Scraper:
 
         elem = self.driver.find_element(By.XPATH,'//*[@id="afsprakenLijst"]/div[2]/table/tbody')
         #get subelements from elem
-        elems = elem.find_elements_by_tag_name('tr')
+        elems = elem.find_elements(By.TAG_NAME,'tr')
 
         daynum = 0
 
@@ -109,7 +109,7 @@ class Scraper:
         
         menu_item_xpath = '//*[@id="menu-cijfers"]'
 
-        elem = self.driver.find_element_by_xpath(menu_item_xpath)
+        elem = self.driver.find_element(By.XPATH,menu_item_xpath)
         elem.click()
 
         time.sleep(2)
