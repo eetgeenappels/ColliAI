@@ -23,13 +23,17 @@ class ConversationalAI:
               use_mlock = True)
         
 
-    def generate_response(self, user_input, api_prompt = None):
+    def generate_response(self, user_input,memory_prompt = None, api_prompt = None):
         # Join messages
+        print(f"User Prompt: {user_input}")
+        print(f"Menory Prompt: {memory_prompt}")
+        print(f"API prompt: {api_prompt}")
         conversation_history_input = "".join(user_input)
 
+        if memory_prompt != None:
+            conversation_history_input = "\n" + conversation_history_input[1:].join(memory_prompt) + conversation_history_input[-1:]
         if api_prompt != None:
             conversation_history_input = "\n" + conversation_history_input[1:] + api_prompt + conversation_history_input[-1:]
-
 
 
         generated_response = ""

@@ -3,39 +3,37 @@ import time
 import threading
 import random
 import json
+from TextGeneration import memory
 
 class TelegramBot:
     def __init__(self, token, model, magister_scraper):
         self.bot = telebot.TeleBot(token)
         self.model = model
-        self.chat_log = []
         self.last_message = time.time()
         self.last_chatid = 0
         self.magister_scraper = magister_scraper
+        self.context = []
 
     def start(self):
         @self.bot.message_handler(commands=['start'])
         def handle_start(message):
             self.bot.reply_to(message, "Hi! I'm Colli.")
             chat_id = message.chat.id
-            if chat_id not in self.chat_log:
-                self.chat_log = []
-
             with open("character.json","r") as f:
                 context = json.loads(f.read())["character_description"]
 
             
-            self.chat_log.append("Context: " + context)
-            self.chat_log.append("<start>")
-            self.chat_log.append(f"Colli: Hi! I'm Colli\n")
+            self.context.append(f"Context: {context}\n")
+            self.context.append("<start>")
             self.last_chatid = chat_id
         
         @self.bot.message_handler(commands=['reset'])
         def handle_reset(message):
             chat_id = message.chat.id
             self.last_chatid = chat_id
-            self.chat_log = []
-            self.bot.reply_to(message, "Chat reset.")
+            # handle database reset
+            memory.reset_db()
+            self.bot.reply_to(message, "Database reset.")
 
         @self.bot.message_handler(commands=['chatlog_raw'])
         def hande_chatlog_raw(message):
@@ -57,7 +55,7 @@ class TelegramBot:
 
             self.last_message = time.time()
             
-            self.chat_log.append(f"You: {message.text}\n")
+            memory.add_message(f"You: {message.text}\n")
             
             print(f"recieved: {message.text}")
 
@@ -96,16 +94,17 @@ class TelegramBot:
 
                 st = time.time()
 
-                reply = self.model.generate_response(self.chat_log , api_prompt = formatted_rooster)
+                memory_prompt = memory.get_context(memory.query(memory.get_embedding(message.text))["id"])
+                reply = self.model.generate_response(self.context + memory.get_last_20_messages() ,memory_prompt = memory_prompt, api_prompt = formatted_rooster)
 
                 et = time.time()
 
-                print(f"sending: {reply}")
+                print(f"sending: {reply}\n")
 
                 if not reply == "":
                     self.bot.reply_to(message, reply)
                 
-                self.chat_log.append(f"Colli: {reply}\n")
+                memory.add_message(f"Colli: {reply}")
                 
                 print(f"sent message")
 
@@ -134,16 +133,17 @@ class TelegramBot:
 
                 st = time.time()
 
-                reply = self.model.generate_response(self.chat_log , api_prompt = last_grade)
+                memory_prompt = memory.get_context(memory.query(memory.get_embedding(message.text))["id"])
+                reply = self.model.generate_response(self.context + memory.get_last_20_messages() ,memory_prompt = memory_prompt, api_prompt = last_grade)
 
                 et = time.time()
 
-                print(f"sending: {reply}")
+                print(f"sending: {reply}\n")
 
                 if not reply == "":
                     self.bot.reply_to(message, reply)
                 
-                self.chat_log.append(f"Colli: {reply}\n")
+                memory.add_message(f"Colli: {reply}")
                 
                 print(f"sent message")
 
@@ -151,7 +151,8 @@ class TelegramBot:
 
                 st = time.time()
 
-                reply = self.model.generate_response(self.chat_log)
+                memory_prompt = memory.get_context(memory.query(memory.get_embedding(message.text))["id"])
+                reply = self.model.generate_response(self.context + memory.get_last_20_messages() ,memory_prompt = memory_prompt)
 
                 et = time.time()
 
@@ -162,7 +163,7 @@ class TelegramBot:
                 if not reply == "":
                     self.bot.reply_to(message, reply)
 
-                self.chat_log.append(f"Colli: {reply}\n")
+                memory.add_message(f"Colli: {reply}\n")
 
                 print(f"sent message")
 

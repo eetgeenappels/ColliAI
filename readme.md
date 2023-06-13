@@ -12,8 +12,9 @@ Then you need to install the dependencies
 
 pip install pyTelegramBotAPI
 pip install pyllamacpp
-pip install selenium
+pip install selenium==4.9.0
 pip install tqdm
+pip install InstructorEmbedding
 
 ```
 

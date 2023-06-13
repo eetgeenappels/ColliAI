@@ -26,8 +26,7 @@ class Scraper:
 
         # Uncomment for Firefox GUI webdriver:
         # driver = webdriver.Firefox()
-        self.driver = webdriver.Chrome(
-            chrome_options=chrome_options)
+        self.driver = webdriver.Chrome(chrome_options=chrome_options)
         # Navigating to Magister and loging in,
         # Grabbing the accestoken for the private API:
         self.driver.get("https://" + school + ".magister.net")
@@ -41,6 +40,7 @@ class Scraper:
         elem.clear()
         elem.send_keys(password)
         elem.send_keys(Keys.RETURN)
+        sleep(2)
         elem = self.driver.find_element(By.ID,"idSIButton9")
         elem.click()
         sleep(2)
