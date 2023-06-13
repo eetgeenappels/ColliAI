@@ -26,8 +26,8 @@ class TelegramBot:
         
         @self.bot.message_handler(commands=['reset'])
         def handle_reset(message):
-            self.last_chatid = chat_id
             chat_id = message.chat.id
+            self.last_chatid = chat_id
             self.chat_log = []
             self.bot.reply_to(message, "Chat reset.")
 
