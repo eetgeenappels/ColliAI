@@ -18,11 +18,8 @@ class ConversationalAI:
                 
         # load model
         self.model = Model(model_path=credentials.model,
-              n_ctx=512,
-              prompt_context=prompt_context,
               prompt_prefix=prompt_prefix,
               prompt_suffix=prompt_suffix,
-              n_gpu_layers=32,
               use_mlock = True)
         
 
@@ -39,11 +36,26 @@ class ConversationalAI:
         for token in tqdm(self.model.generate(conversation_history_input,
                                             antiprompt='You:',
                                             n_threads=6,
-                                            n_predict=40,
-                                            repeat_penalty=.5,
-                                            frequency_penalty=.5),
+                                            n_predict=40),
                         desc='Generating response',
                         unit='token'):
             generated_response += token
+            if len(generated_response) >= 4:
+                continue
+
+            if generated_response[-4:] == "You:":
+                # remove Colli from document
+                generated_response = generated_response[4:]
+                break
+        
+            if len(generated_response) >= 6:
+                continue
+
+            # check if last 6 characters are COlli
+            if generated_response[-6:] == "Colli:":
+                # remove Colli from document
+                generated_response = generated_response[6:]
+                break
+            # check if last 4 characters are You:
 
         return generated_response

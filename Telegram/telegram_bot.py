@@ -31,6 +31,15 @@ class TelegramBot:
             self.chat_log = []
             self.bot.reply_to(message, "Chat reset.")
 
+        @self.bot.message_handler(commands=['chatlog_raw'])
+        def hande_chatlog_raw(message):
+            from pprint import pformat
+            self.bot.reply_to(message, pformat(self.chat_log))
+
+        @self.bot.message_handler(commands=['chatlog_format'])
+        def hande_chatlog_format(message):
+            self.bot.reply_to(message, "".join(self.chat_log))
+
         @self.bot.message_handler(func=lambda message: True)
         def handle_all_messages(message):
 
