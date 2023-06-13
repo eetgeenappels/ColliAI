@@ -28,7 +28,9 @@ class ConversationalAI:
         conversation_history_input = "".join(user_input)
 
         if api_prompt != None:
-            conversation_history_input = api_prompt + "\n" + conversation_history_input
+            conversation_history_input = "\n" + conversation_history_input[1:] + api_prompt + conversation_history_input[-1:]
+
+
 
         generated_response = ""
 

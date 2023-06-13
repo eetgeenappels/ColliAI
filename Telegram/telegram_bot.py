@@ -2,6 +2,7 @@ import telebot
 import time
 import threading
 import random
+import json
 
 class TelegramBot:
     def __init__(self, token, model, magister_scraper):
@@ -19,10 +20,15 @@ class TelegramBot:
             chat_id = message.chat.id
             if chat_id not in self.chat_log:
                 self.chat_log = []
+
+            with open("character.json","r") as f:
+                context = json.loads(f.read())["character_description"]
+
             
+            self.chat_log.append("Context: " + context)
+            self.chat_log.append("<start>")
             self.chat_log.append(f"Colli: Hi! I'm Colli\n")
             self.last_chatid = chat_id
-            #self.chat_log.append("<start>")
         
         @self.bot.message_handler(commands=['reset'])
         def handle_reset(message):
@@ -99,7 +105,7 @@ class TelegramBot:
                 if not reply == "":
                     self.bot.reply_to(message, reply)
                 
-                self.chat_log.append(f"{reply}\n")
+                self.chat_log.append(f"Colli: {reply}\n")
                 
                 print(f"sent message")
 
@@ -137,7 +143,7 @@ class TelegramBot:
                 if not reply == "":
                     self.bot.reply_to(message, reply)
                 
-                self.chat_log.append(f"{reply}\n")
+                self.chat_log.append(f"Colli: {reply}\n")
                 
                 print(f"sent message")
 
@@ -156,7 +162,7 @@ class TelegramBot:
                 if not reply == "":
                     self.bot.reply_to(message, reply)
 
-                self.chat_log.append(f"{reply}\n")
+                self.chat_log.append(f"Colli: {reply}\n")
 
                 print(f"sent message")
 
