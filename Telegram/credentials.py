@@ -1,5 +1,4 @@
 import json
-import sys
 
 #get --config_file argument form command line
 import argparse
@@ -24,3 +23,4 @@ username = config["magister_username"]
 password = config["magister_password"]
 school = config["magister_school"]
 model = config["model"]
+use_magister = config["use_magister"]

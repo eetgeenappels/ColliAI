@@ -5,10 +5,7 @@ from Telegram import credentials
 
 class ConversationalAI:
     def __init__(self):
-        self.model = None
         self.memory = None
-
-    def start(self):
 
         with open("character.json", 'r')as file:
              prompt_context = json.loads(file.read())["character_description"]
@@ -26,7 +23,7 @@ class ConversationalAI:
     def generate_response(self, user_input,memory_prompt = None, api_prompt = None):
         # Join messages
         print(f"User Prompt: {user_input}")
-        print(f"Menory Prompt: {memory_prompt}")
+        print(f"Memory Prompt: {memory_prompt}")
         print(f"API prompt: {api_prompt}")
         conversation_history_input = "".join(user_input)
 
@@ -62,6 +59,5 @@ class ConversationalAI:
                 # remove Colli from document
                 generated_response = generated_response[6:]
                 break
-            # check if last 4 characters are You:
 
         return generated_response

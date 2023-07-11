@@ -6,7 +6,6 @@ from time import sleep
 from seleniumwire import webdriver
 import os
 import platform
-# Importing libraries
 
 class Scraper:
 

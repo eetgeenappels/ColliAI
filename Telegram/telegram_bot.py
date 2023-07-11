@@ -6,7 +6,7 @@ import json
 from TextGeneration import memory
 
 class TelegramBot:
-    def __init__(self, token, model, magister_scraper):
+    def __init__(self, token, model, magister_scraper = None):
         self.bot = telebot.TeleBot(token)
         self.model = model
         self.last_message = time.time()
@@ -59,7 +59,7 @@ class TelegramBot:
             
             print(f"recieved: {message.text}")
 
-            if "school" in message.text.lower() or "lesson" in message.text.lower() or "class" in message.text.lower() or "teacher" in message.text.lower() or "room" in message.text.lower():
+            if ("school" in message.text.lower() or "lesson" in message.text.lower() or "class" in message.text.lower() or "teacher" in message.text.lower() or "room" in message.text.lower()) and self.magister_scraper != None:
                 
                 # fetch school data
                 rooster = self.magister_scraper.rooster()
@@ -108,7 +108,7 @@ class TelegramBot:
                 
                 print(f"sent message")
 
-            elif "grade" in message.text.lower():
+            elif "grade" in message.text.lower() and self.magister_scraper != None:
 
                 last_grade = self.magister_scraper.cijfers()[-1:][0]
 
