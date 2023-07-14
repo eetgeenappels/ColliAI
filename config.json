@@ -3,5 +3,8 @@
     "magister_username": "",
     "magister_password": "",
     "magister_school": "",
-    "model": ""
+    "use_magister": "",
+    "sd_model": "",
+    "sd_vae_model": "",
+    "text_model": ""
 }
