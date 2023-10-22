@@ -1,10 +1,9 @@
-from TextGeneration.interference import ConversationalAI
-from Telegram.telegram_bot import TelegramBot
-import Telegram.credentials as credentials
+from telegram.telegram_bot import TelegramBot
+import credentials
 from magister.magister_scraper import Scraper
-from TextGeneration import memory
-from StableDiffusion import intent_classefier
-
+from textgen import memory
+from sd import intent_classefier
+from textgen.interference import ConversationalAI
 
 # open config file with json and pull out username and password
 magister_scraper = None
@@ -18,4 +17,12 @@ memory.load_model()
 
 intent_classefier.load_model()
 
-TelegramBot(credentials.telegram_token, ai,magister_scraper= magister_scraper).start()
+if credentials.chat_app == "telegram":
+
+    TelegramBot(credentials.telegram_token, ai,magister_scraper= magister_scraper).start()
+
+elif credentials.chat_app == "discord":
+
+    # WIP
+
+    pass

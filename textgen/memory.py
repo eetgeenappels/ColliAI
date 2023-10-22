@@ -83,14 +83,14 @@ def query(embedding):
 
     return response
 
-def get_last_20_messages():
+def get_last_n_messages(n):
     messages = []
     if get_message_count() == 0:
         print ("this is called")
         with open("chat_metadata.json", "r") as f:
             print(f.read())
         return []
-    for i in range(get_message_count()-1, get_message_count()-21, -1):
+    for i in range(get_message_count()-1, get_message_count()-1 - n, -1):
         if i < 0:
             break
         message = collection.get(ids=[str(i)])["metadatas"][0]["message_content"]

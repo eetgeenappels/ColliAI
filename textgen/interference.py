@@ -1,7 +1,7 @@
 from pyllamacpp.model import Model
 import json
 from tqdm import tqdm
-from Telegram import credentials
+import credentials
 
 class ConversationalAI:
     def __init__(self):
@@ -10,8 +10,8 @@ class ConversationalAI:
         with open("character.json", 'r')as file:
              prompt_context = json.loads(file.read())["character_description"]
 
-        prompt_prefix = "\nYou:"
-        prompt_suffix = "\nColli:"
+        prompt_prefix = ""
+        prompt_suffix = "\n### Colli"
                 
         # load model
         self.model = Model(model_path=credentials.model,
@@ -22,9 +22,6 @@ class ConversationalAI:
 
     def generate_response(self, user_input,memory_prompt = None, api_prompt = None):
         # Join messages
-        print(f"User Prompt: {user_input}")
-        print(f"Memory Prompt: {memory_prompt}")
-        print(f"API prompt: {api_prompt}")
         conversation_history_input = "".join(user_input)
 
         if memory_prompt != None:
@@ -37,7 +34,7 @@ class ConversationalAI:
 
         # Wrap the loop with tqdm
         for token in tqdm(self.model.generate(conversation_history_input,
-                                            antiprompt='You:',
+                                            antiprompt='### You',
                                             n_threads=6,
                                             n_predict=40),
                         desc='Generating response',
@@ -46,18 +43,18 @@ class ConversationalAI:
             if len(generated_response) >= 4:
                 continue
 
-            if generated_response[-4:] == "You:":
+            if generated_response[-3:] == "###":
                 # remove Colli from document
-                generated_response = generated_response[4:]
+                generated_response = generated_response[3:]
                 break
         
-            if len(generated_response) >= 6:
+            if len(generated_response) >= 3:
                 continue
 
             # check if last 6 characters are COlli
-            if generated_response[-6:] == "Colli:":
+            if generated_response[-3:] == "###":
                 # remove Colli from document
-                generated_response = generated_response[6:]
+                generated_response = generated_response[3:]
                 break
 
         return generated_response

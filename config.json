@@ -1,10 +1,10 @@
 {
-    "telegram_token": "",
+    "telegram_bot_token": "",
     "magister_username": "",
     "magister_password": "",
     "magister_school": "",
-    "use_magister": "",
-    "sd_model": "",
-    "sd_vae_model": "",
-    "text_model": ""
+    "use_magister": false,
+    "chat_app": "",
+    "model": "",
+    "discord_bot_token": ""
 }

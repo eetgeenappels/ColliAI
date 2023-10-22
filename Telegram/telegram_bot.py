@@ -3,7 +3,8 @@ import time
 import threading
 import random
 import json
-from TextGeneration import memory
+from textgen import memory
+from textgen import message_handler
 
 class TelegramBot:
     def __init__(self, token, model, magister_scraper = None):
@@ -54,118 +55,16 @@ class TelegramBot:
             self.last_chatid = chat_id
 
             self.last_message = time.time()
-            
-            memory.add_message(f"You: {message.text}\n")
-            
-            print(f"recieved: {message.text}")
 
-            if ("school" in message.text.lower() or "lesson" in message.text.lower() or "class" in message.text.lower() or "teacher" in message.text.lower() or "room" in message.text.lower()) and self.magister_scraper != None:
-                
-                # fetch school data
-                rooster = self.magister_scraper.rooster()
+            st = time.time()
 
-                from pprint import pprint
-                pprint(rooster)
+            reply = message_handler.procces_message(message.text, self.magister_scraper, self.model)
 
-                formatted_rooster = "These are the current classes of 'You:':\n\n"
+            et = time.time()
+            if not reply == "":
+                self.bot.reply_to(message, reply)
 
-                subject_hashes = {
-                    "dr": "Theater",
-                    "na": "Physics",
-                    "gs": "History",
-                    "kmt": "Mentor Hour",
-                    "la": "Latin",
-                    "du": "German",
-                    "en": "English",
-                    "wi": "Math",
-                    "wtu": "WTU",
-                    "fa": "French",
-                    "lo": "Gym",
-                    "ak": "Geography",
-                    "ne": "Dutch",
-                    "gr": "Greek",
-                    "sk": "Chemistry"
-                }
-
-                for lesson in rooster:
-                    formatted_rooster += f"The subject is {subject_hashes[lesson['vak']]} with teacher {lesson['docent']} in the room {lesson['lokaal']} in the Lesson hour {lesson['lesuur']})\n"
-
-                print(formatted_rooster)
-
-                st = time.time()
-
-                memory_prompt = memory.get_context(memory.query(memory.get_embedding(message.text))["id"])
-                reply = self.model.generate_response(self.context + memory.get_last_20_messages() ,memory_prompt = memory_prompt, api_prompt = formatted_rooster)
-
-                et = time.time()
-
-                print(f"sending: {reply}\n")
-
-                if not reply == "":
-                    self.bot.reply_to(message, reply)
-                
-                memory.add_message(f"Colli: {reply}")
-                
-                print(f"sent message")
-
-            elif "grade" in message.text.lower() and self.magister_scraper != None:
-
-                last_grade = self.magister_scraper.cijfers()[-1:][0]
-
-                subject_hashes = {
-                    "natuurkunde": "Physics",
-                    "biologie": "Biology",
-                    "geschiedenis": "History",
-                    "latijn": "Latin",
-                    "Duitse taal": "German",
-                    "Franse taal": "French",
-                    "aardrijkskunde": "Geography",
-                    "drama":"Theater",
-                    "Engelse taal": "English",
-                    "lichamelijke opvoeding": "Gym",
-                    "godsdienst/levensbeschouwing": "Religion",
-                    "Nederlandse taal": "Dutch",
-                    "Griekse taal en letterkunde": "Greek",
-                    "wiskunde": "Math",
-                }
-
-                last_grade = f"The last grade was {last_grade['cijfer']}/10 in the {subject_hashes[last_grade['vak']]} subject."
-
-                st = time.time()
-
-                memory_prompt = memory.get_context(memory.query(memory.get_embedding(message.text))["id"])
-                reply = self.model.generate_response(self.context + memory.get_last_20_messages() ,memory_prompt = memory_prompt, api_prompt = last_grade)
-
-                et = time.time()
-
-                print(f"sending: {reply}\n")
-
-                if not reply == "":
-                    self.bot.reply_to(message, reply)
-                
-                memory.add_message(f"Colli: {reply}")
-                
-                print(f"sent message")
-
-            else:
-
-                st = time.time()
-
-                memory_prompt = memory.get_context(memory.query(memory.get_embedding(message.text))["id"])
-                reply = self.model.generate_response(self.context + memory.get_last_20_messages() ,memory_prompt = memory_prompt)
-
-                et = time.time()
-
-                print(f"response generated in {et - st} seconds")
-
-                print(f"sending: {reply}")
-
-                if not reply == "":
-                    self.bot.reply_to(message, reply)
-
-                memory.add_message(f"Colli: {reply}\n")
-
-                print(f"sent message")
+            print(f"sent message")
 
         # Create and start the threads
         send_message_thread = threading.Thread(target=self.bot.polling)

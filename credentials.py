@@ -14,23 +14,21 @@ if args.config_file == None:
 else:
     config_filename = args.config_file
 
-with open(config_filename, "r") as config_file:
-    config = json.loads(config_file.read())
-
-
-chat_app = config["chat_app"]
-
-# check chat app and get app token
+# check chat app
 if config["chat_app"] == "discord":
-    
-    discord_bot_token = config["discord_bot_token"]
+
+    bot_token = config["discord_bot_token"]
 
 elif config["chat_app"] == "telegram":
 
-    telegram_bot_token = config["telegram_bot_token"]
+
+    with open(config_filename, "r") as f:
+        config = json.load(f)
+
+    # Extract telegram token from config
+    telegram_token = config["telegram_bot_token"]
 
 
-# chekc for magister implementation
 use_magister = config["use_magister"]
 
 if use_magister:
