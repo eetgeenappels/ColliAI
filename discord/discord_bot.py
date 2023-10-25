@@ -2,7 +2,6 @@ import discord
 import time
 import threading
 import random
-from textgen import memory
 from textgen import message_handler
 
 class DiscordBot:
@@ -47,8 +46,8 @@ class DiscordBot:
         random_conv_waiter_thread.join()
 
     async def random_conv_waiter(self):
+        
         # Randomly wait to start a new conversation
-
         self.last_message = time.time()
 
         while True:
