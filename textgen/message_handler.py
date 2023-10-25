@@ -1,5 +1,5 @@
 import credentials
-import memory
+from textgen import memory
 import time
 from pprint import pprint
 from magister import magister_scraper

@@ -9,10 +9,14 @@ args = parser.parse_args()
 
 # check if argument exists
 if args.config_file == None:
-    print("No config file specified, exiting")
+    print("No config file specified using config.json")
     config_filename = "config.json"
 else:
     config_filename = args.config_file
+
+#open config file
+with open(config_filename, "r") as f:
+        config = json.load(f)
 
 # check chat app
 if config["chat_app"] == "discord":
@@ -20,10 +24,6 @@ if config["chat_app"] == "discord":
     bot_token = config["discord_bot_token"]
 
 elif config["chat_app"] == "telegram":
-
-
-    with open(config_filename, "r") as f:
-        config = json.load(f)
 
     # Extract telegram token from config
     telegram_token = config["telegram_bot_token"]

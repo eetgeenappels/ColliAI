@@ -1,6 +1,6 @@
 import joblib
 import numpy as np
-from TextGeneration.memory import get_embedding
+from textgen.memory import get_embedding
 
 def load_model():
     global classifier
