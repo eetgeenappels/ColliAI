@@ -7,10 +7,13 @@ class ConversationalAI:
         self.memory = None
 
         with open("character.json", 'r')as file:
-            self.prompt_context = json.loads(file.read())["character_description"]
+            
+            character = json.loads(file.read())
 
-        prompt_prefix = ""
-        prompt_suffix = "\n### Colli"
+            self.prompt_context = character["character_description"]
+
+            prompt_prefix = character["prompt_prefix"]
+            prompt_suffix = character["prompt_suffix"]
                 
         # load model
         self.model = Llama(model_path=credentials.model, use_mlock=True, n_gpu_layers=-1,prompt_prefix=prompt_prefix,
@@ -27,5 +30,7 @@ class ConversationalAI:
             conversation_history_input = "\n" + conversation_history_input[1:] + api_prompt + conversation_history_input[-1:]
         
         conversation_history_input = conversation_history_input.join(user_input)
+
+        print(conversation_history_input)
 
         return self.model(conversation_history_input, stop=["\n","###"],repeat_penalty=1.5,echo=True)["choices"][0]["text"][len(conversation_history_input):]

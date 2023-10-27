@@ -11,7 +11,10 @@ class DiscordBot:
         self.last_message = time.time()
         self.context = []
         self.magister_scraper = magister_scraper
-        self.client = discord.Client()
+
+        intents = discord.Intents.default()
+        intents.message_content = True
+        self.client = discord.Client(intents=intents)
 
     def start(self):
         @self.client.event
@@ -27,7 +30,7 @@ class DiscordBot:
             self.last_message_type = "user_message"
             self.last_message = time.time()
 
-            reply = message_handler.process_message(message.content, self.magister_scraper, self.model)
+            reply = message_handler.procces_message(message=message.content,magister_scraper= self.magister_scraper, model=self.model)
 
             if reply:
                 await message.channel.send(reply)

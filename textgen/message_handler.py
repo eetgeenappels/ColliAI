@@ -20,9 +20,11 @@ def procces_message(message: str, magister_scraper: magister_scraper.Scraper, mo
 
     memory.add_message(f"### Instruction\n{message}\n")
 
+    api_prompt = ""
+
     if ("school" in message.lower() or "lesson" in message.lower() or "class" in message.lower() or "teacher" in message.lower() or "room" in message.lower()) and credentials.use_magister:
          
-         api_prompt = get_magister_rooster_promt(magister_scraper)
+        api_prompt = get_magister_rooster_promt(magister_scraper)
 
     elif "grade" in message.lower() and credentials.use_magister:
 
@@ -30,7 +32,7 @@ def procces_message(message: str, magister_scraper: magister_scraper.Scraper, mo
 
     st = time.time()
 
-    memory_prompt = memory.get_context(memory.query(memory.get_embedding(message.text))["id"])
+    memory_prompt = memory.get_context(memory.query(memory.get_embedding(message))["id"])
     reply = model.generate_response(context + memory.get_last_n_messages(20) ,memory_prompt = memory_prompt, api_prompt = api_prompt)
 
     et = time.time()

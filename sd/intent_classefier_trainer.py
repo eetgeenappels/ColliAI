@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.linear_model import LogisticRegression
-from TextGeneration.memory import get_embedding
-from TextGeneration.memory import load_model
+from textgen.memory import get_embedding
+from textgen.memory import load_model
 from tqdm import tqdm
 import joblib
 import concurrent.futures

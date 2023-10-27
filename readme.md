@@ -19,8 +19,11 @@ pip install llama-cpp-python
 
 or
 
-# if you have a mac
+# if you have a intel mac
 CMAKE_ARGS="-DLLAMA_METAL=on" pip install llama-cpp-python
+
+# for apple silicon
+CMAKE_ARGS="-DCMAKE_OSX_ARCHITECTURES=arm64 "-DLLAMA_METAL=on" pip install llama-cpp-python
 
 pip install selenium==4.9.0 selenium-wire
 pip install tqdm

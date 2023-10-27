@@ -11,10 +11,7 @@ count = -1
 def create_database():
     global collection, client
 
-    client = chromadb.Client(Settings(
-        chroma_db_impl="duckdb+parquet",
-        persist_directory="database"
-    ))
+    client = chromadb.PersistentClient(path="database/")
     
     collection = client.get_or_create_collection("chatlog", embedding_function=cosine_similarity)
     
