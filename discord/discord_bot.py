@@ -48,6 +48,10 @@ class DiscordBot:
         client_thread.join()
         random_conv_waiter_thread.join()
 
+        @self.bot.command()
+        async def foo(ctx, arg):
+            await ctx.send(arg)
+
     async def random_conv_waiter(self):
         
         # Randomly wait to start a new conversation

@@ -17,7 +17,7 @@ class ConversationalAI:
                 
         # load model
         self.model = Llama(model_path=credentials.model, use_mlock=True, n_gpu_layers=-1,prompt_prefix=prompt_prefix,
-              prompt_suffix=prompt_suffix)
+              prompt_suffix=prompt_suffix, n_ctx=2048)
         
 
     def generate_response(self, user_input,memory_prompt = None, api_prompt = None):
@@ -33,4 +33,8 @@ class ConversationalAI:
 
         print(conversation_history_input)
 
-        return self.model(conversation_history_input, stop=["\n","###"],repeat_penalty=1.5,echo=True)["choices"][0]["text"][len(conversation_history_input):]
+        response = self.model(conversation_history_input, stop=["\n","###"],repeat_penalty=1.5,echo=True)["choices"][0]["text"][len(conversation_history_input):]
+
+        print(response)
+
+        return response

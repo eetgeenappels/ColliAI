@@ -33,7 +33,7 @@ def procces_message(message: str, magister_scraper: magister_scraper.Scraper, mo
     st = time.time()
 
     memory_prompt = memory.get_context(memory.query(memory.get_embedding(message))["id"])
-    reply = model.generate_response(context + memory.get_last_n_messages(20) ,memory_prompt = memory_prompt, api_prompt = api_prompt)
+    reply = model.generate_response(context + memory.get_last_n_messages(credentials.message_context_size) ,memory_prompt = memory_prompt, api_prompt = api_prompt)
 
     et = time.time()
 
